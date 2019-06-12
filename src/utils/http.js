@@ -1,6 +1,6 @@
 // 封装axios
 import axios from 'axios'
-import {Toast} from 'vant'
+import { Toast } from 'vant'
 
 const http = axios.create()
 // 设置开发环境和上线环境的默认地址
@@ -13,11 +13,11 @@ http.interceptors.response.use(response => {
   let res = response.data
   if (res.status === 0) {
     // 请求成功
-    return res;
+    return res
   } else {
     Toast('网络异常，请稍后重试！')
   }
-},error => {
+}, error => {
   Toast('网络异常，请稍后重试！')
   console.log(error)
 })

@@ -1,8 +1,8 @@
 // 电影页面仓库数据
 
 // 引入封装好的axions
-import http from '@/utils/http.js';
-import { Toast } from 'vant';
+import http from '@/utils/http.js'
+import { Toast } from 'vant'
 
 export default {
   namespaced: true,
@@ -11,9 +11,9 @@ export default {
     filmList: [], // 当前影片的数据
     curFilmType: 0, // 当前影片类型，0 为正在热映，1 为即将上映
     pageNum: 1, // 当前页码
-    pageSize: 10 , // 每页显示的条数
-    loading: false ,// 是否在请求数据
-    filmTotal: 10 , // 电影列表的总数
+    pageSize: 10, // 每页显示的条数
+    loading: false, // 是否在请求数据
+    filmTotal: 10 // 电影列表的总数
   },
   mutations: {
     // 设置 仓库中的轮播图数据
@@ -66,8 +66,8 @@ export default {
           'X-Host': 'mall.cfg.common-banner'
         }
       }).then(res => {
-          // console.log(res);
-          commit('STEBANNERLIST', res.data)
+        // console.log(res);
+        commit('STEBANNERLIST', res.data)
       })
       // .catch(err => {
       //   console.log(err)
@@ -83,15 +83,15 @@ export default {
      * 获取影片数据
      * @param {boolean} isLoadMore 判断是不是加载更多，如果是就做一个filmList的拼接
      */
-    getFilmList ({ commit, state}, isLoadMore) {
-      commit('SETLOADING', true), // 请求中
+    getFilmList ({ commit, state }, isLoadMore) {
+      commit('SETLOADING', true) // 请求中
       Toast.loading({
         mask: true,
-        duration: 0,	// 展示时长(ms)，值为 0 时，toast 不会消失
+        duration: 0, // 展示时长(ms)，值为 0 时，toast 不会消失
         message: '玩命加载中...'
-      });
-      setTimeout( () => {
-        http.get('/gateway',{
+      })
+      setTimeout(() => {
+        http.get('/gateway', {
           params: {
             cityId: 440300,
             pageNum: state.pageNum,
@@ -105,7 +105,7 @@ export default {
             'X-Host': 'mall.film-ticket.film.list'
           }
         }).then(res => {
-          console.log(res)
+          // console.log(res)
           if (isLoadMore) {
             // 加载更多
             let newFilmList = [...state.filmList, ...res.data.films]

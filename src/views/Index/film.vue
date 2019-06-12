@@ -27,8 +27,8 @@
 
 <script>
 import FilmList from '@/components/FilmList'
-import { mapActions, mapState } from 'vuex'
-import { Toast } from 'vant';
+import { mapActions, mapState, mapMutations } from 'vuex'
+import { Toast } from 'vant'
 
 export default {
   // data () {
@@ -36,22 +36,23 @@ export default {
   //     tabAct: 0
   //   }
   // },
-  components:{
+  components: {
     FilmList
   },
   computed: {
-    ...mapState('film',['bannerList','filmList', 'loading', 'pageNum', 'filmTotal']),
+    ...mapState('film', ['bannerList', 'filmList', 'loading', 'pageNum', 'filmTotal']),
+    ...mapMutations('film',['ADDPAGENUM']),
     curFilmType: {
       get () {
-        return this.$store.state.film.curFilmType;
+        return this.$store.state.film.curFilmType
       },
       set (value) {
-        this.$store.commit('film/SETCURFILMTYPE',value)
+        this.$store.commit('film/SETCURFILMTYPE', value)
       }
     }
   },
   methods: {
-    ...mapActions('film',['getBannerList', 'getFilmList', 'filmChange']),
+    ...mapActions('film', ['getBannerList', 'getFilmList', 'filmChange']),
     // 可以把影片类型切换放入到仓库中
     // /**
     //  * 影片类型切换
@@ -67,18 +68,19 @@ export default {
      */
     onScroll () {
       // 判断当前滚动条是否滚到底部
-      let scrollTop = document.documentElement.scrollTop;// 获取滚动条距离顶部的高度
-      let scrollHeight = document.body.scrollHeight; // 页面高度
-      let clientHeight = document.documentElement.clientHeight; // 可视高度
+      let scrollTop = document.documentElement.scrollTop// 获取滚动条距离顶部的高度
+      let scrollHeight = document.body.scrollHeight // 页面高度
+      let clientHeight = document.documentElement.clientHeight // 可视高度
       // console.log(scrollTop ,clientHeight)
-      if ( scrollHeight - scrollTop - clientHeight <= 50) {
-        console.log('到底了')
-        console.log(this.filmList.length,this.filmTotal)
-        if (!this.loading){ // 当loading为false说明没在请求，请求之后loading为true，！true就进不来
-          if ( this.filmList.length >= this.filmTotal) {
-            Toast('没有更多了')
+      if (scrollHeight - scrollTop - clientHeight <= 50) {
+        // console.log('到底了')
+        // console.log(this.filmList.length,this.filmTotal)
+
+        if (!this.loading) { // 当loading为false说明没在请求，请求之后loading为true，！true就进不来
+          if (this.filmList.length >= this.filmTotal) {
+            Toast('兄弟，到底了')
           } else {
-            this.getFilmList( true ); // 传了true过去说明是加载更多，filmList要做一个拼接
+            this.getFilmList(true) // 传了true过去说明是加载更多，filmList要做一个拼接
           }
         }
       }
@@ -87,10 +89,13 @@ export default {
   created () {
     this.getBannerList()
     // console.log(this.bannerList)
-    this.getFilmList();
+    this.getFilmList()
     // console.log(this.filmList)
     // 在创建后可以监听到滚动条,监听的是window
-    window.addEventListener('scroll',this.onScroll)
+    window.addEventListener('scroll', this.onScroll)
+  },
+  beforeDestroy () {
+    this.ADDPAGENUM(true)
   }
 }
 </script>
@@ -98,7 +103,6 @@ export default {
 <style lang="less">
 @import '~@/style/common/mixins.less';
 @import '~@/style/common/variable.less';
-
 
 .page-film{
   .swiper{
